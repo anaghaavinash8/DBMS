@@ -1,0 +1,21 @@
+#1.Display the entire CAR relation in the ascending order of manufacturing year.
+select * from car order by year asc;
+
+#2.Find the number of accidents in which cars belonging to a specific model (example 'Lancer') were involved.
+select count(report_num)
+from car c, participated p
+where c.reg_num=p.reg_num and c.model='Lancer';
+
+#3.Find the total number of people who owned cars that were involved in accidents in 2008. select count (distinct driver_id) CNT
+from participated a, accident b
+where a.report_num=b.report_num and b.accident_date like ' 08%';
+
+#4.List the entire participated relation in the descending order of damage amount.
+select * from participated order by damage_amount desc;
+
+#5.Find the average damage amount
+SELECT AVG (damage_amount) from participated;
+
+#6.Delete the tuple whose damage amount is below the average damage amount.
+delete from participated where damage_amount < (select p.damage_amount from (select AVG (damage_amount) as damage_amount FROM participated p);
+select * from participated;
