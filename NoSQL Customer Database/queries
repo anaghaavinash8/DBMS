@@ -1,0 +1,55 @@
+#1. Create a collection by name Customers with the following attributes. Cust_id, Acc_Bal, Acc_Type
+db.createCollection("Customers");
+
+#2. Insert at least 5 values into the table
+db.Customers.insertMany([
+{ Cust_id: 1, Acc_Bal: 1500, Acc_Type: "Z" },
+{ Cust_id: 2, Acc_Bal: 900, Acc_Type: "A" },
+{ Cust_id: 3, Acc_Bal: 2500, Acc_Type: "Z" },
+{ Cust_id: 4, Acc_Bal: 1200, Acc_Type: "B" },
+{ Cust_id: 5, Acc_Bal: 3500, Acc_Type: "Z" }
+]);
+
+#3. Write a query to display those records whose total account balance is greater than 1200 of account type ‘Z’ for each customer_id.
+db.Customers.find(
+{ Acc_Bal: { $gt: 1200 }, Acc_Type: "Z" });
+[
+  {
+    _id: ObjectId('693a35992213c33e9463b112'),
+    Cust_id: 1,
+    Acc_Bal: 1500,
+    Acc_Type: 'Z'
+  },
+  {
+    _id: ObjectId('693a35992213c33e9463b114'),
+    Cust_id: 3,
+    Acc_Bal: 2500,
+    Acc_Type: 'Z'
+  },
+  {
+    _id: ObjectId('693a35992213c33e9463b116'),
+    Cust_id: 5,
+    Acc_Bal: 3500,
+    Acc_Type: 'Z'
+  }
+]
+
+#4. Determine Minimum and Maximum account balance for each customer_id.
+db.Customers.aggregate([
+{
+$group: {
+_id: "$Cust_id",
+Min_Balance: { $min: "$Acc_Bal" },
+Max_Balance: { $max: "$Acc_Bal" }
+}}
+]);
+
+#5. Export the created collection into local file system
+mongoexport --uri="mongodb+srv://anaghaavinash:hello123@cluster0.dwswkrp.mongodb.net/test" --collection=Customers --type=csv --fields=Cust_id,Acc_Bal,Acc_Type --out=customers.csv
+
+
+#6. Drop the table
+db.Customers.drop();
+
+#7. Import a given csv dataset from local file system into mongodb collection.
+mongoimport --db test --collection Customers --type=csv --headerline --file customers.csv
